@@ -63,7 +63,7 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
           <div className="w-2 h-2 rounded-full bg-green-500/10"></div>
         </div>
         <div className="bg-black/20 rounded-full px-6 py-0.5 text-[7px] text-neutral-600 font-medium tracking-[0.2em] uppercase truncate max-w-[180px]">
-          {isMobileView ? 'Mobile Device' : `https://preview.${sector.toLowerCase().replace(/\s/g, '')}.com`}
+          {isMobileView ? 'Mobile Device' : `https://preview.${sector.toLowerCase().replace(/\s+/g, '')}.com`}
         </div>
         <div className="w-6"></div>
       </div>
@@ -151,24 +151,24 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
 
           <div className="relative z-10 max-w-4xl w-full text-center space-y-10">
              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 backdrop-blur-md border border-white/5 rounded-full text-[9px] font-medium text-white/50 uppercase tracking-[0.2em]">
-               <CheckCircle2 size={12} className="text-indigo-500" /> Sektörel Liderlik
+               <CheckCircle2 size={12} className="text-indigo-500" /> Sector Leader
              </div>
              <h1 className="text-4xl md:text-7xl font-bold text-white tracking-tight leading-[1.1]" style={{fontFamily: `${fontFamily}, sans-serif`}}>
-                {sector} için <br/> 
-                <span className="opacity-50 font-light">Geleceği Tasarlıyoruz.</span>
+                Design for <br/> 
+                <span className="opacity-50 font-light">{sector}</span>
              </h1>
              <p className="text-neutral-500 text-sm md:text-lg font-medium max-w-xl mx-auto leading-relaxed">
-                Modern mimari ve yapay zeka entegrasyonu ile {sector} dünyasında markanızı bir adım öne çıkarın.
+                Elevate your brand in the {sector} market with modern architecture and AI integration.
              </p>
              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
                 <button 
                   className="w-full sm:w-auto px-10 py-4 bg-white text-black font-bold text-[10px] uppercase tracking-wider rounded-xl hover:bg-neutral-200 transition-all flex items-center justify-center gap-3"
                   style={{fontFamily: `${fontFamily}, sans-serif`}}
                 >
-                  Keşfetmeye Başla <ArrowRight size={14} />
+                  Get Started <ArrowRight size={14} />
                 </button>
                 <div className="flex items-center gap-4 text-white/20 text-[9px] font-bold uppercase tracking-[0.2em]">
-                  <Globe size={18} className="text-indigo-600" /> Global Standartlar
+                  <Globe size={18} className="text-indigo-600" /> Global Standards
                 </div>
              </div>
           </div>

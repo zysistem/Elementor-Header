@@ -5,6 +5,7 @@ export const generateHeaderDesignVariations = async (
   apiKey: string,
   sector: string, 
   description: string, 
+  language: 'en' | 'tr',
   userPrefs: { 
     style: string, 
     mechanic: string,
@@ -16,27 +17,34 @@ export const generateHeaderDesignVariations = async (
 ): Promise<HeaderDesign[]> => {
   const ai = new GoogleGenAI({ apiKey });
   
+  const langPrompt = language === 'tr' 
+    ? "Lütfen tüm menü öğelerini, buton metinlerini ve tasarım özetlerini TÜRKÇE olarak oluştur." 
+    : "Please generate all menu items, button texts, and design summaries in ENGLISH.";
+
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `Sen bir High-End Web Designer ve Elementor Pro uzmanısın. ElementsKit ve modern UI trendlerinden (SaaS, Luxury, Minimalist) ilham alarak 4 FARKLI header tasarımı yap.
+    contents: `You are a High-End Web Designer and Elementor Pro expert. Inspired by ElementsKit and modern UI trends (SaaS, Luxury, Minimalist), create 4 DIFFERENT header designs.
 
-    PARAMETRELER:
-    - Sektör: ${sector}
-    - Kullanıcı İsteği: ${description}
-    - Stil: ${userPrefs.style}
-    - Teknik: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Blur Aktif' : 'Blur Kapalı'}
+    PARAMETERS:
+    - Sector: ${sector}
+    - User Request: ${description}
+    - Style: ${userPrefs.style}
+    - Technical: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Blur Enabled' : 'Blur Disabled'}
+    - Language: ${language.toUpperCase()}
 
-    TASARIM YAKLAŞIMLARI:
-    1. "The Minimalist": Çok ince fontlar, geniş harf boşlukları (letter-spacing), tamamen şeffaf arka plan, logo solda.
-    2. "The Floating Pill": Ekranın üstünden kopuk, kapsül şeklinde, ince borderlı, blur efektli.
-    3. "The Centered Identity": Logo tam ortada, menü elemanları sağda ve solda dengeli (Split menu), premium hissi.
-    4. "The Action Oriented": Sağ tarafta vurgulu bir CTA butonu, sol tarafta sosyal ikonlar veya kısa iletişim bilgisi barındıran ince bir üst bar (double-row).
+    ${langPrompt}
 
-    KURALLAR:
-    - Tipografi: Kaba fontlardan kaçın. 'Inter', 'Outfit' veya 'Plus Jakarta Sans' kullan. Ağırlıklar 400-600 arası olsun.
-    - Renkler: Sektörle uyumlu modern paletler seç.
-    - İçerik: Menü öğeleri ve CTA metni '${sector}' sektörüyle doğrudan alakalı olsun.
-    - Blur: Eğer blur isteniyorsa, ana konteynır için 'backdrop-filter: blur(10px)' kullanılacağını varsay.`,
+    DESIGN APPROACHES:
+    1. "The Minimalist": Very thin fonts, wide letter-spacing, fully transparent background, logo on the left.
+    2. "The Floating Pill": Detached from the top, capsule-shaped, thin borders, with blur effect.
+    3. "The Centered Identity": Centered logo, menu items balanced on left and right (Split menu), premium feel.
+    4. "The Action Oriented": Prominent CTA button on the right, thin top bar (double-row) for social icons or brief contact info.
+
+    RULES:
+    - Typography: Avoid chunky fonts. Use 'Inter', 'Outfit', or 'Plus Jakarta Sans'. Weights between 400-600.
+    - Colors: Choose modern palettes matching the sector.
+    - Content: Menu items and CTA text must be strictly relevant to the '${sector}' sector in ${language.toUpperCase()}.
+    - Blur: If blur is enabled, use 'backdrop-filter: blur(10px)'.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
