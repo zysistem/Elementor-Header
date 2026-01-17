@@ -1,62 +1,73 @@
-
 import { HeaderDesign, ElementorJSON } from "../types";
 
 export const convertToElementorJSON = (design: HeaderDesign): string => {
   const containerId = Math.random().toString(36).substr(2, 9);
   
-  // Custom CSS optimized for Elementor injection
+  // Elementor specific high-priority CSS logic
   const cssCode = `
-/* Global Container Effects */
+/* Elementor AI Header Auto-Generated CSS */
 selector {
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    ${design.hasBlur ? 'backdrop-filter: blur(20px) saturate(180%) !important; -webkit-backdrop-filter: blur(20px) saturate(180%) !important;' : ''}
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    ${design.hasBlur ? 'backdrop-filter: blur(25px) saturate(200%) !important; -webkit-backdrop-filter: blur(25px) saturate(200%) !important;' : ''}
+    z-index: 100 !important;
 }
 
-/* Sticky Transitions */
 selector.elementor-sticky--effects {
     background-color: ${design.colors.background} !important;
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Nav Menu Modern Styling */
+/* Nav Menu Styling */
 selector .elementor-nav-menu--main .elementor-item {
     color: ${design.colors.text} !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.1em !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.12em !important;
     text-transform: uppercase !important;
+    font-size: 13px !important;
     transition: color 0.3s ease !important;
 }
 
-selector .elementor-nav-menu--main .elementor-item:hover {
+selector .elementor-nav-menu--main .elementor-item:hover,
+selector .elementor-nav-menu--main .elementor-item.elementor-item-active {
     color: ${design.colors.primary} !important;
 }
 
-/* CTA Button Interaction */
+/* Button Styling */
 selector .elementor-button {
     background-color: ${design.colors.primary} !important;
     border-radius: 12px !important;
-    padding: 14px 28px !important;
+    padding: 16px 32px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.1em !important;
     transition: all 0.3s ease !important;
+    box-shadow: 0 8px 25px ${design.colors.primary}33 !important;
 }
 
 selector .elementor-button:hover {
-    background-color: ${design.colors.primary} !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 12px 35px ${design.colors.primary}4D !important;
     filter: brightness(1.1);
-    transform: translateY(-2px);
+}
+
+/* Hamburger Menu Toggle */
+selector .elementor-menu-toggle {
+    color: ${design.colors.primary} !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 10px !important;
 }
   `.replace(/\s+/g, ' ').trim();
 
   const elementorTemplate: ElementorJSON = {
     version: "0.4",
-    title: `AI Header - ${design.style.toUpperCase()}`,
+    title: `AI Flux Header - ${design.sector}`,
     type: "header",
     page_settings: {
       sticky: design.isSticky ? "top" : "",
       sticky_on: ["desktop", "tablet", "mobile"],
       sticky_effects_offset: 50,
-      custom_css: cssCode 
+      custom_css: cssCode // GLOBAL SCOPE INJECTION
     },
     content: [
       {
@@ -74,23 +85,23 @@ selector .elementor-button:hover {
           padding: {
             unit: "px",
             top: "20",
-            right: "40",
+            right: "60",
             bottom: "20",
-            left: "40",
+            left: "60",
             isLinked: false
           },
           padding_mobile: {
             unit: "px",
             top: "12",
-            right: "20",
+            right: "24",
             bottom: "12",
-            left: "20",
+            left: "24",
             isLinked: false
           },
-          _custom_css: cssCode
+          _custom_css: cssCode // CONTAINER SPECIFIC INJECTION
         },
         elements: [
-          // Logo Container / Widget
+          // Logo Widget
           {
             id: Math.random().toString(36).substr(2, 9),
             elType: "widget",
@@ -102,11 +113,13 @@ selector .elementor-button:hover {
               title_color: design.colors.primary,
               typography_typography: "custom",
               typography_font_weight: "900",
-              typography_font_family: "Inter"
+              typography_font_family: "Inter",
+              _custom_css: cssCode
             } : {
-              image: { url: design.logo.content || "https://via.placeholder.com/150x50" },
-              width: { unit: "px", size: 160 },
-              width_mobile: { unit: "px", size: 110 }
+              image: { url: design.logo.content || "https://via.placeholder.com/180x50" },
+              width: { unit: "px", size: 180 },
+              width_mobile: { unit: "px", size: 120 },
+              _custom_css: cssCode
             }
           },
           // Menu Widget
@@ -122,23 +135,24 @@ selector .elementor-button:hover {
               full_width: "yes",
               toggle_align: "right",
               toggle_color: design.colors.primary,
-              _display_mobile: "block"
+              _custom_css: cssCode
             }
           },
-          // Button Widget
+          // CTA Button
           {
             id: Math.random().toString(36).substr(2, 9),
             elType: "widget",
             widgetType: "button",
             settings: {
-              text: design.cta?.text || "GET STARTED",
+              text: design.cta?.text || "EXPLORE",
               link: { url: "#" },
               background_color: design.colors.primary,
               button_text_color: "#ffffff",
               typography_typography: "custom",
-              typography_font_weight: "800",
-              typography_font_size: { unit: "px", size: 12 },
-              _display_mobile: "none"
+              typography_font_weight: "900",
+              typography_font_family: "Inter",
+              _display_mobile: "none",
+              _custom_css: cssCode
             }
           }
         ]
