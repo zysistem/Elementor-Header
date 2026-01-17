@@ -1,10 +1,10 @@
 
-import React, { useState } from 'react';
-import { generateHeaderDesign } from './services/geminiService';
+import React, { useState, useEffect } from 'react';
+import { generateHeaderDesignVariations } from './services/geminiService';
 import { convertToElementorJSON } from './services/elementorExporter';
 import { HeaderDesign } from './types';
 import HeaderPreview from './components/HeaderPreview';
-import { Download, Sparkles, Wand2, Loader2, RefreshCcw, CheckCircle2, Layout, Settings2, Palette, Image as ImageIcon, Type as TypeIcon, Info } from 'lucide-react';
+import { Download, Sparkles, Wand2, Loader2, RefreshCcw, CheckCircle2, Layout, Settings2, Palette, Image as ImageIcon, Type as TypeIcon, Smartphone, Monitor, AlertTriangle } from 'lucide-react';
 
 const App: React.FC = () => {
   const [sector, setSector] = useState('');
@@ -15,9 +15,16 @@ const App: React.FC = () => {
   const [logoType, setLogoType] = useState<'text' | 'image'>('text');
   const [logoContent, setLogoContent] = useState('');
   
-  const [design, setDesign] = useState<HeaderDesign | null>(null);
+  const [variations, setVariations] = useState<HeaderDesign[]>([]);
+  const [selectedIdx, setSelectedIdx] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isPreviewMobile, setIsPreviewMobile] = useState(false);
+
+  // Safety check for published environment
+  useEffect(() => {
+    console.log("App mounted");
+  }, []);
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,30 +33,37 @@ const App: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const result = await generateHeaderDesign(sector, description, { 
+      // Varyasyon sayısını 2'ye indirdik (Performans ve Timeout hataları için)
+      const results = await generateHeaderDesignVariations(sector, description, { 
         style, 
         isSticky, 
         hasBlur, 
         logoType, 
         logoContent 
       });
-      setDesign(result);
-    } catch (err) {
-      setError('Tasarım oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.');
-      console.error(err);
+      if (results && Array.isArray(results) && results.length > 0) {
+        setVariations(results);
+        setSelectedIdx(0);
+      } else {
+        throw new Error("Geçerli bir tasarım üretilemedi.");
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Tasarım oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.');
+      console.error("Generation error:", err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDownload = () => {
+    const design = variations[selectedIdx];
     if (!design) return;
     const jsonStr = convertToElementorJSON(design);
     const blob = new Blob([jsonStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `elementor-container-header-${design.sector.toLowerCase().replace(/\s+/g, '-')}.json`;
+    link.download = `elementor-header-${design.sector.toLowerCase().replace(/\s+/g, '-')}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -57,170 +71,201 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 selection:bg-indigo-500/30 selection:text-white font-sans">
+    <div className="min-h-screen bg-[#050505] text-neutral-100 selection:bg-indigo-500/40 font-sans">
       {/* Navbar */}
-      <nav className="bg-black/50 backdrop-blur-3xl sticky top-0 z-[100] border-b border-white/5">
-        <div className="container mx-auto px-8 py-5 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-2xl shadow-white/5">
-              <Sparkles className="text-black" size={24} />
+      <nav className="bg-black/60 backdrop-blur-2xl sticky top-0 z-[100] border-b border-white/5">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(79,70,229,0.3)]">
+              <Sparkles className="text-white" size={20} />
             </div>
             <div>
-              <h1 className="text-xl font-black tracking-tighter text-white leading-none uppercase">
-                Elementor <span className="text-indigo-500">Flux</span>
+              <h1 className="text-lg font-black tracking-tighter text-white leading-none uppercase">
+                Header <span className="text-indigo-500">Forge</span>
               </h1>
-              <span className="text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-black">AI Container Engine</span>
+              <span className="text-[8px] uppercase tracking-[0.3em] text-neutral-500 font-black">AI Elementor Designer</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
-             <div className="hidden md:flex items-center gap-6 mr-6 text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
-               <span>Documentation</span>
-               <span>Presets</span>
-             </div>
-            <span className="px-5 py-2 bg-indigo-600/10 text-indigo-400 text-[10px] font-black rounded-full border border-indigo-500/20 uppercase tracking-widest">Container v1.0</span>
+            <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-neutral-400 uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/5">
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+              Flex Container Ready
+            </div>
           </div>
         </div>
       </nav>
 
-      <main className="container mx-auto px-8 py-20 max-w-7xl">
-        {!design ? (
-          <div className="grid lg:grid-cols-12 gap-20 items-center">
-            <div className="lg:col-span-5 space-y-12">
-              <div className="space-y-6">
-                <h2 className="text-7xl font-black text-white tracking-tighter leading-[0.95] animate-in slide-in-from-left duration-700">
-                  Lüks <br/>
-                  Arayüzler <br/>
-                  <span className="text-neutral-500">Bir Tıkla.</span>
+      <main className="container mx-auto px-6 py-12 max-w-7xl">
+        {variations.length === 0 ? (
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-5 space-y-10 py-10">
+              <div className="space-y-4">
+                <h2 className="text-7xl font-black text-white tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-left duration-700">
+                  Elementor <br/> Header <br/>
+                  <span className="text-indigo-600">Sihirbazı.</span>
                 </h2>
-                <p className="text-lg text-neutral-400 leading-relaxed font-medium max-w-sm">
-                  Yapay zeka ile Elementor'un en yeni Container sistemine %100 uyumlu, yüksek performanslı header'lar tasarlayın.
+                <p className="text-xl text-neutral-400 font-medium max-w-sm">
+                  Yapay zeka ile her sektöre uygun 2 farklı premium tasarım seçeneği. Flexbox Container desteğiyle.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                {[
-                  { icon: <CheckCircle2 size={18} />, text: "Elementor Container-First JSON" },
-                  { icon: <Settings2 size={18} />, text: "Native CSS Injection" },
-                  { icon: <Palette size={18} />, text: "Professional Color Palettes" }
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 p-5 bg-white/5 rounded-3xl border border-white/5 shadow-2xl">
-                     <div className="text-indigo-500">{item.icon}</div>
-                     <p className="text-sm font-bold text-neutral-300 tracking-wide">{item.text}</p>
-                  </div>
-                ))}
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-4 p-5 bg-white/5 rounded-3xl border border-white/5 shadow-2xl">
+                  <div className="text-indigo-500"><CheckCircle2 size={24} /></div>
+                  <p className="text-sm font-bold text-neutral-300">Gelişmiş CSS Entegrasyonu</p>
+                </div>
+                <div className="flex items-center gap-4 p-5 bg-white/5 rounded-3xl border border-white/5 shadow-2xl">
+                  <div className="text-indigo-500"><Smartphone size={24} /></div>
+                  <p className="text-sm font-bold text-neutral-300">Mobil Uyumlu Container Yapısı</p>
+                </div>
               </div>
             </div>
 
-            <form onSubmit={handleGenerate} className="lg:col-span-7 bg-[#0a0a0a] p-12 rounded-[3.5rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5 space-y-10">
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Sektörel Kimlik</label>
-                  <input
-                    type="text"
-                    value={sector}
-                    onChange={(e) => setSector(e.target.value)}
-                    placeholder="Örn: Butik Mağara Oteli"
-                    className="w-full px-8 py-6 rounded-3xl bg-white/5 border border-white/10 focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500/50 transition-all outline-none font-bold text-xl text-white"
-                    required
-                  />
+            <form onSubmit={handleGenerate} className="lg:col-span-7 bg-[#0a0a0a] p-10 rounded-[3rem] border border-white/10 space-y-8 shadow-[0_0_50px_rgba(0,0,0,0.4)]">
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest px-1">Sektörünüz</label>
+                    <input
+                      type="text"
+                      value={sector}
+                      onChange={(e) => setSector(e.target.value)}
+                      placeholder="Örn: Butik Mağara Oteli"
+                      className="w-full px-6 py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-bold outline-none focus:border-indigo-500 transition-colors"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest px-1">Logo Seçeneği</label>
+                    <div className="flex gap-2 mb-2">
+                      <button type="button" onClick={() => setLogoType('text')} className={`flex-1 py-2 text-[9px] font-black rounded-lg transition-all ${logoType === 'text' ? 'bg-white text-black' : 'bg-white/5 text-neutral-500 border border-white/5'}`}>METİN</button>
+                      <button type="button" onClick={() => setLogoType('image')} className={`flex-1 py-2 text-[9px] font-black rounded-lg transition-all ${logoType === 'image' ? 'bg-white text-black' : 'bg-white/5 text-neutral-500 border border-white/5'}`}>GÖRSEL URL</button>
+                    </div>
+                    <input
+                      type="text"
+                      value={logoContent}
+                      onChange={(e) => setLogoContent(e.target.value)}
+                      placeholder={logoType === 'text' ? "Marka Adı" : "https://logo-url.com/logo.png"}
+                      className="w-full px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white font-bold outline-none focus:border-indigo-500 text-sm transition-colors"
+                    />
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8">
-                   <div className="space-y-4">
-                      <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Tasarım Dili</label>
-                      <select 
-                        value={style} 
-                        onChange={(e) => setStyle(e.target.value as any)}
-                        className="w-full px-6 py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-sm outline-none cursor-pointer hover:bg-white/10 transition-colors"
-                      >
-                        <option value="minimal">Minimalist</option>
-                        <option value="modern">Modern Luxury</option>
-                        <option value="corporate">Professional</option>
-                        <option value="creative">Creative Edge</option>
-                      </select>
-                   </div>
-                   <div className="space-y-4">
-                      <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Logo Formatı</label>
-                      <div className="flex gap-2">
-                        <button type="button" onClick={() => setLogoType('text')} className={`flex-1 py-4 rounded-2xl border transition-all text-xs font-black ${logoType === 'text' ? 'bg-white text-black border-white' : 'bg-white/5 text-neutral-500 border-white/10'}`}>TEXT</button>
-                        <button type="button" onClick={() => setLogoType('image')} className={`flex-1 py-4 rounded-2xl border transition-all text-xs font-black ${logoType === 'image' ? 'bg-white text-black border-white' : 'bg-white/5 text-neutral-500 border-white/10'}`}>IMAGE</button>
-                      </div>
-                   </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest px-1">Tasarım Nasıl Olsun?</label>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Siyah zemin üzerine altın sarısı detaylar, menü ortada..."
+                    className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-medium outline-none focus:border-indigo-500 h-28 resize-none transition-colors"
+                  ></textarea>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6 pt-8 border-t border-white/5">
-                   <label className="flex flex-col gap-3 cursor-pointer">
-                     <span className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Sticky Header</span>
-                     <div className={`p-6 rounded-3xl border-2 transition-all flex justify-between items-center ${isSticky ? 'border-indigo-500 bg-indigo-500/5' : 'border-white/5 bg-white/5'}`}>
-                        <span className="text-xs font-black uppercase tracking-widest">{isSticky ? 'ON' : 'OFF'}</span>
-                        <input type="checkbox" checked={isSticky} onChange={(e) => setIsSticky(e.target.checked)} className="w-5 h-5 accent-indigo-500" />
-                     </div>
-                   </label>
-                   <label className="flex flex-col gap-3 cursor-pointer">
-                     <span className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Glass Blur</span>
-                     <div className={`p-6 rounded-3xl border-2 transition-all flex justify-between items-center ${hasBlur ? 'border-indigo-500 bg-indigo-500/5' : 'border-white/5 bg-white/5'}`}>
-                        <span className="text-xs font-black uppercase tracking-widest">{hasBlur ? 'ON' : 'OFF'}</span>
-                        <input type="checkbox" checked={hasBlur} onChange={(e) => setHasBlur(e.target.checked)} className="w-5 h-5 accent-indigo-500" />
-                     </div>
-                   </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <button type="button" onClick={() => setIsSticky(!isSticky)} className={`p-5 rounded-2xl border-2 transition-all flex justify-between items-center ${isSticky ? 'border-indigo-600 bg-indigo-600/5' : 'border-white/5 bg-white/5'}`}>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Sabit (Sticky)</span>
+                    <div className={`w-3 h-3 rounded-full ${isSticky ? 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]' : 'bg-neutral-700'}`}></div>
+                  </button>
+                  <button type="button" onClick={() => setHasBlur(!hasBlur)} className={`p-5 rounded-2xl border-2 transition-all flex justify-between items-center ${hasBlur ? 'border-indigo-600 bg-indigo-600/5' : 'border-white/5 bg-white/5'}`}>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Buzlu Cam (Blur)</span>
+                    <div className={`w-3 h-3 rounded-full ${hasBlur ? 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]' : 'bg-neutral-700'}`}></div>
+                  </button>
                 </div>
               </div>
 
-              {error && <div className="p-6 bg-red-500/10 text-red-400 rounded-3xl text-xs font-bold border border-red-500/20">{error}</div>}
+              {error && (
+                <div className="p-5 bg-red-500/10 text-red-400 rounded-2xl text-[11px] font-bold border border-red-500/20 flex items-center gap-3">
+                  <AlertTriangle size={16} />
+                  {error}
+                </div>
+              )}
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-white hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 text-black font-black py-7 rounded-[2.5rem] shadow-[0_20px_60px_rgba(255,255,255,0.1)] transition-all flex items-center justify-center gap-4 group text-xl tracking-tighter"
+                className="w-full bg-white hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 text-black font-black py-6 rounded-[2rem] transition-all flex items-center justify-center gap-4 text-xl tracking-tighter shadow-2xl shadow-white/5"
               >
-                {loading ? (
-                  <><Loader2 className="animate-spin" size={28} /> ANALYZING...</>
-                ) : (
-                  <><Wand2 size={28} /> GENERATE HEADER</>
-                )}
+                {loading ? <><Loader2 className="animate-spin" /> TASARLANIYOR...</> : <><Wand2 /> 2 TASARIM OLUŞTUR</>}
               </button>
             </form>
           </div>
         ) : (
-          <div className="space-y-16 animate-in fade-in slide-in-from-bottom-12 duration-1000">
-            <div className="flex flex-col lg:flex-row justify-between items-center gap-10 bg-white/5 p-12 rounded-[4rem] border border-white/5 backdrop-blur-3xl">
-              <div className="flex items-center gap-8">
-                <div className="w-24 h-24 bg-indigo-500/10 rounded-[2.5rem] flex items-center justify-center text-indigo-500 border border-indigo-500/20 shadow-inner">
-                  <CheckCircle2 size={44} />
-                </div>
-                <div>
-                  <h3 className="text-4xl font-black text-white tracking-tighter">Perfected!</h3>
-                  <p className="text-neutral-500 font-bold uppercase tracking-widest text-[10px] mt-2">Flex Container Optimization Active</p>
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+            {/* Header Result Controls */}
+            <div className="bg-[#0a0a0a] p-10 rounded-[3rem] border border-white/10 flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl">
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.3em] mb-1">Tasarım Seçenekleri</span>
+                <div className="flex gap-4">
+                  {variations.map((v, i) => (
+                    <button 
+                      key={i}
+                      onClick={() => setSelectedIdx(i)}
+                      className={`px-8 py-4 rounded-2xl font-black text-xs uppercase transition-all flex items-center gap-3 ${selectedIdx === i ? 'bg-indigo-600 text-white shadow-[0_10px_30px_rgba(79,70,229,0.3)]' : 'bg-white/5 text-neutral-500 border border-white/5 hover:bg-white/10'}`}
+                    >
+                      Seçenek {i + 1}
+                      {selectedIdx === i && <CheckCircle2 size={14} />}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className="flex gap-4 w-full lg:w-auto">
-                <button onClick={() => setDesign(null)} className="flex-1 lg:flex-none px-10 py-5 rounded-3xl border-2 border-white/10 font-black text-neutral-400 hover:bg-white/5 transition-all flex items-center justify-center gap-3 uppercase text-xs tracking-widest">
-                  <RefreshCcw size={18} /> Re-Design
+              <div className="flex gap-4 w-full md:w-auto">
+                <button 
+                  onClick={() => setIsPreviewMobile(!isPreviewMobile)}
+                  className={`p-4 rounded-2xl border transition-all ${isPreviewMobile ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-white/5 border-white/10 text-neutral-400'}`}
+                  title="Mobil/Masaüstü Önizleme"
+                >
+                  {isPreviewMobile ? <Smartphone size={24} /> : <Monitor size={24} />}
                 </button>
-                <button onClick={handleDownload} className="flex-1 lg:flex-none px-12 py-5 rounded-3xl bg-white text-black font-black hover:bg-neutral-200 transition-all flex items-center justify-center gap-3 shadow-[0_20px_50px_rgba(255,255,255,0.1)] uppercase text-xs tracking-widest">
-                  <Download size={18} /> Export JSON
+                <button onClick={() => setVariations([])} className="flex-1 md:flex-none px-8 py-4 rounded-2xl border border-white/10 font-black text-xs text-neutral-500 hover:bg-white/5 uppercase tracking-widest transition-all">
+                  Yeni Tasarım
+                </button>
+                <button onClick={handleDownload} className="flex-1 md:flex-none px-10 py-4 rounded-2xl bg-white text-black font-black text-xs uppercase hover:bg-neutral-200 shadow-xl shadow-white/5 tracking-widest transition-all">
+                  JSON İNDİR
                 </button>
               </div>
             </div>
 
-            <HeaderPreview design={design} />
-
-            <div className="grid lg:grid-cols-4 gap-8">
-               <div className="bg-white/5 p-10 rounded-[3rem] border border-white/5 space-y-6">
-                 <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Palette</span>
-                 <div className="flex gap-3">
-                    <div className="w-12 h-12 rounded-2xl border border-white/10 shadow-2xl" style={{backgroundColor: design.colors.primary}}></div>
-                    <div className="w-12 h-12 rounded-2xl border border-white/10 shadow-2xl" style={{backgroundColor: design.colors.background}}></div>
-                    <div className="w-12 h-12 rounded-2xl border border-white/10 shadow-2xl" style={{backgroundColor: design.colors.text}}></div>
-                 </div>
+            {/* Preview Section */}
+            <div className={`mx-auto transition-all duration-700 ease-in-out ${isPreviewMobile ? 'max-w-[390px]' : 'max-w-full'}`}>
+               <div className="relative group">
+                 <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.6rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+                 <HeaderPreview design={variations[selectedIdx]} />
                </div>
-               
-               <div className="lg:col-span-3 bg-white/5 p-10 rounded-[3rem] border border-white/5 flex flex-col justify-center">
-                  <div className="flex items-start gap-6 text-neutral-400">
-                     <Info className="flex-shrink-0 text-indigo-500" />
-                     <p className="text-xs font-bold leading-relaxed tracking-wide uppercase">
-                       Container sistemini kullanmak için Elementor Ayarları > Özellikler > Flexbox Container'ın "Aktif" olduğundan emin olun. 
-                       CSS kodları sayfa ayarlarındaki "Custom CSS" alanına otomatik olarak enjekte edilmiştir.
+            </div>
+
+            {/* Success Details */}
+            <div className="grid md:grid-cols-2 gap-8">
+               <div className="bg-white/5 p-10 rounded-[2.5rem] border border-white/5 space-y-6">
+                  <h4 className="text-white text-sm font-black uppercase tracking-widest border-b border-white/5 pb-4">Tasarım Parametreleri</h4>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-1">
+                      <p className="text-[10px] text-neutral-500 font-bold uppercase">Stil</p>
+                      <p className="font-bold text-indigo-400 capitalize">{variations[selectedIdx].style}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[10px] text-neutral-400 font-bold uppercase">Arka Plan</p>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 rounded-full border border-white/20" style={{backgroundColor: variations[selectedIdx].colors.background}}></div>
+                        <span className="font-mono text-xs uppercase">{variations[selectedIdx].colors.background}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[10px] text-neutral-400 font-bold uppercase">Vurgu Rengi</p>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 rounded-full border border-white/20" style={{backgroundColor: variations[selectedIdx].colors.primary}}></div>
+                        <span className="font-mono text-xs uppercase">{variations[selectedIdx].colors.primary}</span>
+                      </div>
+                    </div>
+                  </div>
+               </div>
+               <div className="bg-indigo-600/5 p-10 rounded-[2.5rem] border border-indigo-500/10 flex flex-col justify-center">
+                  <div className="space-y-4">
+                     <div className="flex items-center gap-3 text-indigo-400 font-black text-xs uppercase tracking-widest">
+                       <AlertTriangle size={18} /> Import İpucu
+                     </div>
+                     <p className="text-xs text-indigo-200/60 leading-relaxed font-medium">
+                       Elementor'da "Template Import" yaptıktan sonra, sayfa ayarlarındaki "Custom CSS" alanına CSS kodlarının başarıyla eklendiğinden emin olun. 
+                       Buzlu cam efekti için "Flex Container" özelliğinin açık olması gereklidir.
                      </p>
                   </div>
                </div>
@@ -229,9 +274,9 @@ const App: React.FC = () => {
         )}
       </main>
 
-      <footer className="container mx-auto px-8 py-20 text-center border-t border-white/5 mt-20 opacity-30">
-        <p className="text-[10px] font-black tracking-[0.5em] uppercase">
-          &copy; 2024 AI Header Flux Designer - Professional Grade Tool
+      <footer className="container mx-auto px-6 py-20 text-center border-t border-white/5 opacity-40 mt-20">
+        <p className="text-[10px] font-black tracking-[0.6em] uppercase text-neutral-500">
+          &copy; {new Date().getFullYear()} AI Header Flux Forge Designer - Ultra Pro v3
         </p>
       </footer>
     </div>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { HeaderDesign } from '../types';
-import { Menu, Globe } from 'lucide-react';
+import { Menu, Globe, Smartphone, Monitor } from 'lucide-react';
 
 interface Props {
   design: HeaderDesign;
@@ -22,54 +22,52 @@ const HeaderPreview: React.FC<Props> = ({ design }) => {
   };
 
   const renderLogo = () => (
-    <div className="flex-shrink-0 group cursor-pointer">
+    <div className="flex-shrink-0">
       {logo.type === 'text' ? (
-        <div className="flex flex-col">
-          <span className="font-black text-2xl leading-none tracking-tighter" style={{ color: colors.primary }}>
-            {logo.content}
-          </span>
-          <span className="text-[8px] font-bold uppercase tracking-[0.3em] opacity-50" style={{ color: colors.text }}>Est. 2024</span>
-        </div>
+        <span className="font-black text-xl tracking-tighter" style={{ color: colors.primary }}>
+          {logo.content}
+        </span>
       ) : (
         <img 
-          src={logo.content || "https://via.placeholder.com/160x50?text=LOGO"} 
+          src={logo.content || "https://via.placeholder.com/150x45?text=Logo"} 
           alt="Logo" 
-          className="h-10 w-auto object-contain brightness-110"
+          className="h-8 md:h-10 w-auto object-contain"
         />
       )}
     </div>
   );
 
   return (
-    <div className="w-full border rounded-[2.5rem] overflow-hidden bg-[#111] shadow-2xl relative border-white/5">
+    <div className="w-full border rounded-[2.5rem] overflow-hidden bg-[#050505] shadow-2xl relative border-white/5 transition-all">
       {/* Simulation Browser Header */}
-      <div className="bg-neutral-900 px-6 py-3 border-b border-white/5 flex justify-between items-center">
-        <div className="flex gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-          <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-          <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+      <div className="bg-neutral-900/50 px-5 py-2.5 border-b border-white/5 flex justify-between items-center">
+        <div className="flex gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-white/10"></div>
+          <div className="w-2 h-2 rounded-full bg-white/10"></div>
+          <div className="w-2 h-2 rounded-full bg-white/10"></div>
         </div>
-        <div className="bg-black/40 border border-white/5 rounded-full px-24 py-1 text-[9px] text-neutral-500 font-bold tracking-tight">
-          pachacave-hotel.com
+        <div className="hidden sm:block bg-black/40 border border-white/5 rounded-full px-16 py-0.5 text-[8px] text-neutral-500 font-bold uppercase tracking-widest">
+          {design.sector.replace(/\s+/g, '-').toLowerCase()}.com
         </div>
-        <div className="w-10"></div>
+        <div className="w-8"></div>
       </div>
       
-      {/* Scroll Area */}
-      <div className="relative h-[550px] overflow-y-auto bg-[url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center">
+      {/* Container simulating a phone or desktop viewport based on parent size */}
+      <div className="relative h-[450px] overflow-y-auto bg-neutral-900 overflow-x-hidden">
         <header 
-          className={`w-full px-12 py-5 flex items-center transition-all duration-700 z-50 border-b border-white/5 ${isSticky ? 'sticky top-0' : 'relative'}`}
+          className={`w-full px-6 md:px-12 py-4 flex items-center transition-all duration-700 z-50 border-b border-white/5 ${isSticky ? 'sticky top-0' : 'relative'}`}
           style={getBgStyle()}
         >
-          <div className="container mx-auto flex items-center justify-between gap-8">
+          <div className="container mx-auto flex items-center justify-between">
             {renderLogo()}
             
-            <nav className="hidden lg:flex items-center gap-10">
-              {navigation.map((item, idx) => (
+            {/* Desktop Nav - Hidden on mobile preview if container is small */}
+            <nav className="hidden md:flex items-center gap-6 lg:gap-10">
+              {navigation.slice(0, 4).map((item, idx) => (
                 <a 
                   key={idx} 
                   href={item.url} 
-                  className="text-[12px] font-bold tracking-[0.15em] hover:text-indigo-400 transition-all uppercase whitespace-nowrap" 
+                  className="text-[10px] lg:text-[11px] font-black tracking-[0.2em] hover:opacity-50 transition-all uppercase whitespace-nowrap" 
                   style={{ color: colors.text }}
                 >
                   {item.label}
@@ -77,42 +75,37 @@ const HeaderPreview: React.FC<Props> = ({ design }) => {
               ))}
             </nav>
 
-            <div className="flex items-center gap-6">
-              <div className="hidden xl:flex items-center gap-2 text-[11px] font-bold text-white/60 hover:text-white transition-colors cursor-pointer">
-                <Globe size={14} />
-                <span className="uppercase tracking-widest">Turkish</span>
-              </div>
-              
+            <div className="flex items-center gap-4">
               {cta && (
                 <a
                   href={cta.url}
-                  className="px-8 py-3.5 rounded-xl text-[11px] font-black tracking-[0.2em] transition-all hover:scale-105 active:scale-95 shadow-2xl uppercase"
+                  className="hidden sm:block px-6 py-2.5 rounded-lg text-[10px] font-black tracking-[0.15em] transition-all hover:brightness-110 uppercase"
                   style={{ 
                     backgroundColor: colors.primary,
-                    color: '#fff',
-                    boxShadow: `0 10px 30px ${colors.primary}33`
+                    color: '#fff'
                   }}
                 >
                   {cta.text}
                 </a>
               )}
               
-              <button className="lg:hidden p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors">
-                <Menu size={20} />
+              <button className="p-2 rounded-lg bg-white/5 border border-white/10 text-white" style={{ color: colors.primary }}>
+                <Menu size={18} />
               </button>
             </div>
           </div>
         </header>
 
-        {/* Content Placeholder */}
-        <div className="p-24 space-y-16">
-           <div className="max-w-3xl mx-auto text-center space-y-8 animate-in fade-in zoom-in duration-700">
-              <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-[10px] text-white font-bold uppercase tracking-[0.4em] mb-4">
-                Exclusive Experience
-              </div>
-              <h2 className="text-6xl font-black text-white tracking-tighter leading-none italic">Unforgettable Stays</h2>
-              <div className="h-0.5 w-24 bg-white/20 mx-auto"></div>
-              <p className="text-white/60 text-lg font-medium leading-relaxed">Discover luxury redefined in the heart of nature.</p>
+        {/* Dummy Content */}
+        <div className="p-10 space-y-10 text-center">
+           <div className="space-y-4 pt-10">
+              <div className="h-4 w-24 bg-indigo-500/20 rounded-full mx-auto"></div>
+              <h2 className="text-4xl font-black text-white italic">{design.style.toUpperCase()}</h2>
+              <div className="h-1 w-10 bg-indigo-500 mx-auto"></div>
+           </div>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              <div className="h-40 bg-white/5 rounded-3xl border border-white/5"></div>
+              <div className="h-40 bg-white/5 rounded-3xl border border-white/5"></div>
            </div>
         </div>
       </div>
