@@ -3,75 +3,65 @@ import { HeaderDesign, ElementorJSON } from "../types";
 export const convertToElementorJSON = (design: HeaderDesign): string => {
   const containerId = Math.random().toString(36).substr(2, 9);
   
-  // Blur varsa arka planı kesinlikle yarı saydam yap (HEX -> RGBA conversion or adding alpha)
   let bgColor = design.colors.background;
   if (design.hasBlur) {
     if (bgColor.startsWith('#')) {
-      // #000000 -> rgba(0,0,0,0.7)
       const r = parseInt(bgColor.slice(1, 3), 16);
       const g = parseInt(bgColor.slice(3, 5), 16);
       const b = parseInt(bgColor.slice(5, 7), 16);
-      bgColor = `rgba(${r}, ${g}, ${b}, 0.7)`;
+      bgColor = `rgba(${r}, ${g}, ${b}, 0.75)`;
     }
   }
 
   const cssCode = `
-/* ELEMENTOR AI FORGE - BLUR & STICKY ENGINE */
-/* Blur Efektini Zorla */
+/* HEADER FORGE AI - ELEMENTOR PRO CSS INJECTION */
 selector {
     background-color: ${bgColor} !important;
     ${design.hasBlur ? `
-    backdrop-filter: blur(25px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
     ` : ''}
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
 }
 
-/* Floating Mekaniği */
 ${design.layout === 'floating-pill' ? `
 selector {
-    margin: 20px 40px !important;
-    border-radius: 100px !important;
-    width: calc(100% - 80px) !important;
+    margin: 15px auto !important;
+    border-radius: 50px !important;
+    width: 90% !important;
     border: 1px solid rgba(255,255,255,0.1) !important;
 }
 ` : ''}
 
-/* Sticky Durumunda Efektler */
 selector.elementor-sticky--effects {
     background-color: ${design.colors.background} !important;
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
-    border-bottom-color: ${design.colors.primary}40 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
 }
 
-/* Tipografi ve Renkler */
 selector .elementor-nav-menu--main .elementor-item {
     font-family: '${design.fontFamily}', sans-serif !important;
     color: ${design.colors.text} !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.05em !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.08em !important;
     text-transform: uppercase !important;
+    font-size: 13px !important;
 }
 
 selector .elementor-nav-menu--main .elementor-item:hover {
     color: ${design.colors.primary} !important;
+    opacity: 0.7 !important;
 }
 
-/* Buton Tasarımı */
 selector .elementor-button {
     background-color: ${design.colors.primary} !important;
     font-family: '${design.fontFamily}', sans-serif !important;
-    border-radius: 12px !important;
-    font-weight: 800 !important;
-    transition: all 0.3s ease !important;
-}
-
-selector .elementor-button:hover {
-    box-shadow: 0 10px 30px ${design.colors.primary}40 !important;
-    transform: translateY(-2px) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em !important;
+    padding: 12px 28px !important;
 }
   `.replace(/\s+/g, ' ').trim();
 
@@ -82,7 +72,7 @@ selector .elementor-button:hover {
     page_settings: {
       sticky: design.isSticky ? "top" : "",
       sticky_on: ["desktop", "tablet", "mobile"],
-      sticky_effects_offset: 50,
+      sticky_effects_offset: 60,
       custom_css: cssCode
     },
     content: [
@@ -96,7 +86,7 @@ selector .elementor-button:hover {
           align_items: "center",
           background_background: "classic",
           background_color: bgColor,
-          padding: { unit: "px", top: "20", right: "60", bottom: "20", left: "60", isLinked: false },
+          padding: { unit: "px", top: "15", right: "60", bottom: "15", left: "60", isLinked: false },
           _custom_css: cssCode
         },
         elements: [
@@ -109,10 +99,10 @@ selector .elementor-button:hover {
               title_color: design.colors.primary,
               typography_typography: "custom",
               typography_font_family: design.fontFamily,
-              typography_font_weight: "900"
+              typography_font_weight: "700"
             } : {
               image: { url: design.logo.content },
-              width: { unit: "px", size: 180 }
+              width: { unit: "px", size: 160 }
             }
           },
           {

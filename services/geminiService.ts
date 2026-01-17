@@ -18,23 +18,25 @@ export const generateHeaderDesignVariations = async (
   
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `Bir High-End UI/UX Designer ve Elementor Pro uzmanı olarak 4 benzersiz ve ultra-modern header tasarımı yap.
-    
+    contents: `Sen bir High-End Web Designer ve Elementor Pro uzmanısın. ElementsKit ve modern UI trendlerinden (SaaS, Luxury, Minimalist) ilham alarak 4 FARKLI header tasarımı yap.
+
     PARAMETRELER:
     - Sektör: ${sector}
-    - Kullanıcı Notu: ${description}
+    - Kullanıcı İsteği: ${description}
     - Stil: ${userPrefs.style}
-    - Mekanik: ${userPrefs.mechanic}
-    - Teknik: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Glassmorphism' : 'Flat'}
+    - Teknik: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Blur Aktif' : 'Blur Kapalı'}
 
-    TASARIM ÇEŞİTLİLİĞİ (Her varyasyon farklı bir yaklaşım sergilemeli):
-    1. Varyasyon 1 (The Maverick): Modern, geniş paddingli, asimetrik detaylar.
-    2. Varyasyon 2 (Floating Pill): Kenarlardan kopuk, tam yuvarlatılmış (rounded-full), havada süzülen yapı.
-    3. Varyasyon 3 (The Split): Logo merkezde, menü elemanları logoyu çevreleyen iki ayrı konteynerde.
-    4. Varyasyon 4 (Futuristic Glass): Ultra-blur, ince border glow, yüksek teknoloji hissi.
+    TASARIM YAKLAŞIMLARI:
+    1. "The Minimalist": Çok ince fontlar, geniş harf boşlukları (letter-spacing), tamamen şeffaf arka plan, logo solda.
+    2. "The Floating Pill": Ekranın üstünden kopuk, kapsül şeklinde, ince borderlı, blur efektli.
+    3. "The Centered Identity": Logo tam ortada, menü elemanları sağda ve solda dengeli (Split menu), premium hissi.
+    4. "The Action Oriented": Sağ tarafta vurgulu bir CTA butonu, sol tarafta sosyal ikonlar veya kısa iletişim bilgisi barındıran ince bir üst bar (double-row).
 
-    ÖNEMLİ: Font seçimi yaparken Google Fonts'tan (Outfit, Plus Jakarta Sans, Inter) birini seç. 
-    JSON çıktısında hangi renklerin ve fontun neden seçildiğini özetleyen 'mechanicSummary' alanını doldur.`,
+    KURALLAR:
+    - Tipografi: Kaba fontlardan kaçın. 'Inter', 'Outfit' veya 'Plus Jakarta Sans' kullan. Ağırlıklar 400-600 arası olsun.
+    - Renkler: Sektörle uyumlu modern paletler seç.
+    - İçerik: Menü öğeleri ve CTA metni '${sector}' sektörüyle doğrudan alakalı olsun.
+    - Blur: Eğer blur isteniyorsa, ana konteynır için 'backdrop-filter: blur(10px)' kullanılacağını varsay.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -44,8 +46,8 @@ export const generateHeaderDesignVariations = async (
           properties: {
             sector: { type: Type.STRING },
             style: { type: Type.STRING },
-            fontFamily: { type: Type.STRING, description: "Örn: 'Outfit', 'Plus Jakarta Sans', 'Inter'" },
-            mechanicSummary: { type: Type.STRING, description: "Bu tasarımın mekanik ve renk detaylarının özeti." },
+            fontFamily: { type: Type.STRING },
+            mechanicSummary: { type: Type.STRING },
             colors: {
               type: Type.OBJECT,
               properties: {
