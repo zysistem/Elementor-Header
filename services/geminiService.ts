@@ -2,38 +2,40 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { HeaderDesign } from "../types";
 
 export const generateHeaderDesignVariations = async (
+  apiKey: string,
   sector: string, 
   description: string, 
   userPrefs: { 
     style: string, 
+    mechanic: string,
     isSticky: boolean, 
     hasBlur: boolean, 
     logoType: 'text' | 'image',
     logoContent: string 
   }
 ): Promise<HeaderDesign[]> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey });
   
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `Sen bir Elementor Pro ve Modern UI Tasarımcısısın. 
-    WordPress "FLEX CONTAINER" yapısına tam uyumlu 4 FARKLI ve benzersiz header varyasyonu oluştur.
+    contents: `Bir UI/UX ve Elementor Pro uzmanı olarak 4 FARKLI ve MODERN header tasarımı yap.
     
     PARAMETRELER:
     - Sektör: ${sector}
-    - Kullanıcı Notu: ${description}
-    - Stil: ${userPrefs.style}
+    - Ek Bilgi: ${description}
+    - Ana Tema: ${userPrefs.style}
+    - Baskın Mekanik: ${userPrefs.mechanic} (Bu mekaniği tüm varyasyonlara farklı şekillerde yedir)
     - Logo: ${userPrefs.logoType} (${userPrefs.logoContent})
     - Teknik: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Glassmorphism' : 'Flat'}
 
-    MEKANİK KURALLARI (Her tasarımda bunlardan birini baskın kullan):
-    1. Glassmorphism: Yüksek blur, ince beyaz border, yarı saydamlık.
-    2. Neo-Brutalism: Keskin köşeler, sert gölgeler, yüksek kontrast.
-    3. Minimal Luxury: Geniş boşluklar, ince fontlar, sadece vurgu renkleri.
-    4. Gradient Fusion: Renkli borderlar veya buton geçişleri.
+    TASARIM ÇEŞİTLİLİĞİ KURALLARI:
+    1. Varyasyon 1: Klasik Modern (Logo solda, Menü ortada, CTA sağda).
+    2. Varyasyon 2: Floating Minimal (Konteyner kenarlardan boşluklu, rounded-full, havada asılı gibi).
+    3. Varyasyon 3: Bold Split (Logo ortada, menü ikiye bölünmüş veya sol tarafa yaslanmış, dramatik renkler).
+    4. Varyasyon 4: Neo-Glass (Yüksek blur, ince border gradient, fütüristik).
 
-    ÇIKTI FORMATI: Sadece JSON listesi ver. Renkler HEX formatında olsun.
-    Arka plan rengi blur varsa mutlaka RGBA veya HEX + opacity (Örn: #000000CC) olmalı.`,
+    ÇIKTI: Sadece JSON listesi. Renkler HEX veya RGBA olmalı.
+    Elementor Flex Container sistemine uygun yapılar öner.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
