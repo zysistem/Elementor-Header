@@ -23,26 +23,25 @@ export const generateHeaderDesignVariations = async (
 
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `You are a specialized Elementor Pro and ElementsKit developer. You must generate 4 DIFFERENT header variations based on these exact structural patterns:
+    contents: `You are a world-class UI Designer specialized in Elementor Pro and ElementsKit. Create 4 ARCHETYPAL header designs for a '${sector}' website.
 
-    1. "The Software Layout" (V1): Bold primary background (e.g., #6937CE), white text, rounded CTA buttons (10px), centered navigation, strictly modern.
-    2. "The Dual-Bar Professional" (V2): A top bar containing info (phone/email) and social icons, with a clean white main navigation bar below. Professional and informative.
-    3. "The Centered Identity" (V3): Centered logo with menu items split or balanced on both sides. High-end aesthetic, often used in luxury or fashion.
-    4. "The High-Tech Glass" (V4): Full-width, semi-transparent background with mandatory 'backdrop-filter: blur(10px)'. Floating pill-shaped container or standard full-width with thin borders.
+    DESIGN ARCHETYPES (MUST USE ALL 4):
+    1. "THE ENTERPRISE (Dual-Bar)": Top bar (bgColor: Primary or Neutral) with Phone/Email/Socials. Main bar (White/Clean) with logo left and navigation right. Professional, heavy on info.
+    2. "THE MODERN SAAS (Floating Pill)": Full-width, but nav container is a detached pill (100px radius). Needs 'backdrop-filter: blur(15px)'. Ultra-minimal.
+    3. "THE BOUTIQUE (Split-Menu)": Logo is strictly CENTERED. Navigation items are split: half on the left, half on the right. High-end fashion/luxury vibe.
+    4. "THE BOLD ACTION": Solid bold background (e.g. #2575FC). White heavy typography. Oversized CTA button. Action-oriented (Software V1 style).
 
-    PARAMETERS:
-    - Sector: ${sector}
-    - Custom Notes: ${description}
-    - Style: ${userPrefs.style}
-    - Technical: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Blur 10px' : 'No Blur'}
+    TECHNICAL PARAMETERS:
+    - User Request: ${description}
+    - Custom Style: ${userPrefs.style}
     - Language: ${language.toUpperCase()}
-
     ${langPrompt}
 
-    RULES:
-    - Typography: Use 'Inter', 'Outfit', 'Montserrat', 'Poppins', 'Roboto', or 'Jost'. No chunky fonts.
-    - Content: Menu items and CTA must be highly relevant to ${sector}.
-    - Structure: For Elementor Flex Containers. Use the 'layout' field to specify: 'left-logo', 'center-logo', 'split-menu', or 'floating-pill'.`,
+    DESIGN RULES:
+    - Typography: Use 'Inter' (Clean), 'Outfit' (Modern), 'Montserrat' (Classic), 'Poppins' (Soft), 'Rajdhani' (Tech), or 'Jost' (Elegant).
+    - Colors: Use premium palettes (e.g., deep neons, luxury muted golds, or clean monochrome).
+    - Navigation: 4-6 highly relevant menu items for the '${sector}' industry.
+    - Layout Property: You MUST set the 'layout' field to exactly one of: 'left-logo', 'center-logo', 'split-menu', 'floating-pill', 'dual-bar'.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -88,6 +87,14 @@ export const generateHeaderDesignVariations = async (
                 text: { type: Type.STRING },
                 url: { type: Type.STRING },
                 style: { type: Type.STRING }
+              }
+            },
+            topBar: {
+              type: Type.OBJECT,
+              properties: {
+                phone: { type: Type.STRING },
+                email: { type: Type.STRING },
+                socials: { type: Type.ARRAY, items: { type: Type.STRING } }
               }
             },
             layout: { type: Type.STRING },

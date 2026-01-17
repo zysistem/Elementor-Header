@@ -24,7 +24,12 @@ export interface HeaderDesign {
     url: string;
     style: 'button' | 'outline' | 'link';
   };
-  layout: 'left-logo' | 'center-logo' | 'split-menu' | 'floating-pill';
+  topBar?: {
+    phone?: string;
+    email?: string;
+    socials?: string[];
+  };
+  layout: 'left-logo' | 'center-logo' | 'split-menu' | 'floating-pill' | 'dual-bar';
   isSticky: boolean;
   hasBlur: boolean;
 }
