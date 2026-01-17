@@ -1,4 +1,3 @@
-
 export interface NavItem {
   label: string;
   url: string;
@@ -6,7 +5,9 @@ export interface NavItem {
 
 export interface HeaderDesign {
   sector: string;
-  style: 'minimal' | 'modern' | 'corporate' | 'creative';
+  style: string;
+  fontFamily: string;
+  mechanicSummary: string;
   colors: {
     primary: string;
     secondary: string;
@@ -15,7 +16,7 @@ export interface HeaderDesign {
   };
   logo: {
     type: 'text' | 'image';
-    content: string; // Text string or Image URL
+    content: string;
   };
   navigation: NavItem[];
   cta?: {
@@ -23,7 +24,7 @@ export interface HeaderDesign {
     url: string;
     style: 'button' | 'outline' | 'link';
   };
-  layout: 'left-logo' | 'center-logo' | 'split-menu';
+  layout: 'left-logo' | 'center-logo' | 'split-menu' | 'floating-pill';
   isSticky: boolean;
   hasBlur: boolean;
 }

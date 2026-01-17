@@ -18,24 +18,23 @@ export const generateHeaderDesignVariations = async (
   
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `Bir UI/UX ve Elementor Pro uzmanı olarak 4 FARKLI ve MODERN header tasarımı yap.
+    contents: `Bir High-End UI/UX Designer ve Elementor Pro uzmanı olarak 4 benzersiz ve ultra-modern header tasarımı yap.
     
     PARAMETRELER:
     - Sektör: ${sector}
-    - Ek Bilgi: ${description}
-    - Ana Tema: ${userPrefs.style}
-    - Baskın Mekanik: ${userPrefs.mechanic} (Bu mekaniği tüm varyasyonlara farklı şekillerde yedir)
-    - Logo: ${userPrefs.logoType} (${userPrefs.logoContent})
+    - Kullanıcı Notu: ${description}
+    - Stil: ${userPrefs.style}
+    - Mekanik: ${userPrefs.mechanic}
     - Teknik: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Glassmorphism' : 'Flat'}
 
-    TASARIM ÇEŞİTLİLİĞİ KURALLARI:
-    1. Varyasyon 1: Klasik Modern (Logo solda, Menü ortada, CTA sağda).
-    2. Varyasyon 2: Floating Minimal (Konteyner kenarlardan boşluklu, rounded-full, havada asılı gibi).
-    3. Varyasyon 3: Bold Split (Logo ortada, menü ikiye bölünmüş veya sol tarafa yaslanmış, dramatik renkler).
-    4. Varyasyon 4: Neo-Glass (Yüksek blur, ince border gradient, fütüristik).
+    TASARIM ÇEŞİTLİLİĞİ (Her varyasyon farklı bir yaklaşım sergilemeli):
+    1. Varyasyon 1 (The Maverick): Modern, geniş paddingli, asimetrik detaylar.
+    2. Varyasyon 2 (Floating Pill): Kenarlardan kopuk, tam yuvarlatılmış (rounded-full), havada süzülen yapı.
+    3. Varyasyon 3 (The Split): Logo merkezde, menü elemanları logoyu çevreleyen iki ayrı konteynerde.
+    4. Varyasyon 4 (Futuristic Glass): Ultra-blur, ince border glow, yüksek teknoloji hissi.
 
-    ÇIKTI: Sadece JSON listesi. Renkler HEX veya RGBA olmalı.
-    Elementor Flex Container sistemine uygun yapılar öner.`,
+    ÖNEMLİ: Font seçimi yaparken Google Fonts'tan (Outfit, Plus Jakarta Sans, Inter) birini seç. 
+    JSON çıktısında hangi renklerin ve fontun neden seçildiğini özetleyen 'mechanicSummary' alanını doldur.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -45,6 +44,8 @@ export const generateHeaderDesignVariations = async (
           properties: {
             sector: { type: Type.STRING },
             style: { type: Type.STRING },
+            fontFamily: { type: Type.STRING, description: "Örn: 'Outfit', 'Plus Jakarta Sans', 'Inter'" },
+            mechanicSummary: { type: Type.STRING, description: "Bu tasarımın mekanik ve renk detaylarının özeti." },
             colors: {
               type: Type.OBJECT,
               properties: {
@@ -85,7 +86,7 @@ export const generateHeaderDesignVariations = async (
             isSticky: { type: Type.BOOLEAN },
             hasBlur: { type: Type.BOOLEAN }
           },
-          required: ["sector", "style", "colors", "logo", "navigation", "isSticky", "hasBlur"]
+          required: ["sector", "style", "fontFamily", "mechanicSummary", "colors", "logo", "navigation", "isSticky", "hasBlur"]
         }
       }
     }
