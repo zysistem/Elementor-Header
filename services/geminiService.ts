@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { HeaderDesign } from "../types";
 
@@ -17,42 +16,24 @@ export const generateHeaderDesignVariations = async (
   
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `Bir Elementor Pro ve UI/UX uzmanı olarak hareket et. 
-    Modern WordPress "FLEX CONTAINER" sistemine tam uyumlu 2 FARKLI header varyasyonu tasarla.
+    contents: `Sen bir Elementor Pro ve Modern UI Tasarımcısısın. 
+    WordPress "FLEX CONTAINER" yapısına tam uyumlu 4 FARKLI ve benzersiz header varyasyonu oluştur.
     
     PARAMETRELER:
     - Sektör: ${sector}
     - Kullanıcı Notu: ${description}
-    - Genel Stil: ${userPrefs.style}
-    - Logo Tipi: ${userPrefs.logoType}
-    - Logo İçeriği: ${userPrefs.logoContent}
-    - Teknik Tercihler: ${userPrefs.isSticky ? 'Sticky (Sabit)' : 'Normal'}, ${userPrefs.hasBlur ? 'Blur (Buzlu)' : 'Düz'}
+    - Stil: ${userPrefs.style}
+    - Logo: ${userPrefs.logoType} (${userPrefs.logoContent})
+    - Teknik: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Glassmorphism' : 'Flat'}
 
-    Varyasyon Kuralları:
-    1. Varyasyon 1: Ultra Modern & Minimalist (Temiz çizgiler, geniş harf boşlukları).
-    2. Varyasyon 2: Premium & Şık (Göz alıcı renk paleti ve modern gölgeler).
-    3. Her tasarım benzersiz bir renk paleti ve navigasyon yapısı sunmalı.
-    4. Renk paletlerini Elementor'da göze çarpan modern tonlardan seç.
+    MEKANİK KURALLARI (Her tasarımda bunlardan birini baskın kullan):
+    1. Glassmorphism: Yüksek blur, ince beyaz border, yarı saydamlık.
+    2. Neo-Brutalism: Keskin köşeler, sert gölgeler, yüksek kontrast.
+    3. Minimal Luxury: Geniş boşluklar, ince fontlar, sadece vurgu renkleri.
+    4. Gradient Fusion: Renkli borderlar veya buton geçişleri.
 
-    Yanıtını sadece aşağıdaki JSON şemasında (bir dizi olarak) ver:
-    [
-      {
-        "sector": "${sector}",
-        "style": "minimal/modern/corporate/creative",
-        "colors": {
-          "primary": "HEX",
-          "secondary": "HEX",
-          "text": "HEX",
-          "background": "HEX"
-        },
-        "logo": { "type": "${userPrefs.logoType}", "content": "${userPrefs.logoContent || 'BRAND'}" },
-        "navigation": [{"label": "HOME", "url": "#"}, {"label": "SERVICES", "url": "#"}, {"label": "ABOUT", "url": "#"}, {"label": "CONTACT", "url": "#"}],
-        "cta": { "text": "RESERVE", "url": "#", "style": "button" },
-        "layout": "left-logo",
-        "isSticky": ${userPrefs.isSticky},
-        "hasBlur": ${userPrefs.hasBlur}
-      }
-    ]`,
+    ÇIKTI FORMATI: Sadece JSON listesi ver. Renkler HEX formatında olsun.
+    Arka plan rengi blur varsa mutlaka RGBA veya HEX + opacity (Örn: #000000CC) olmalı.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -69,14 +50,16 @@ export const generateHeaderDesignVariations = async (
                 secondary: { type: Type.STRING },
                 text: { type: Type.STRING },
                 background: { type: Type.STRING }
-              }
+              },
+              required: ["primary", "secondary", "text", "background"]
             },
             logo: {
               type: Type.OBJECT,
               properties: {
                 type: { type: Type.STRING },
                 content: { type: Type.STRING }
-              }
+              },
+              required: ["type", "content"]
             },
             navigation: {
               type: Type.ARRAY,
