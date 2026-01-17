@@ -20,13 +20,12 @@ const translations = {
     createKey: 'Create Key',
     startSystem: 'Start System',
     sessionDeactive: 'Data is deactivated after 24 hours.',
-    elementsKitStandards: 'ElementsKit Standards',
     logout: 'Logout',
-    slogan: 'Simple. Modern. ZyHeader.',
-    sloganDesc: 'Create perfect header designs for your WordPress Elementor site with AI.',
+    slogan: 'Elite. Modern. ZyHeader.',
+    sloganDesc: 'Create high-end Elementor Pro headers inspired by premium design libraries using AI.',
     flexReady: 'Elementor Flex Box Ready',
     sector: 'Sector',
-    sectorPlaceholder: 'e.g. Restaurant, Software, Cosmetics...',
+    sectorPlaceholder: 'e.g. Creative Agency, Real Estate, Fashion...',
     designStyle: 'Design Style',
     visualMechanic: 'Visual Mechanic',
     logoLabel: 'Logo (Text or Image URL)',
@@ -42,11 +41,11 @@ const translations = {
     colors: 'Colors',
     fontFamily: 'Font Family',
     designLogic: 'Design Logic',
-    footerText: 'AI Designer - Professional Elementor Components',
+    footerText: 'AI Designer - High-End Elementor Components',
     back: 'Back',
     error: 'Design error. Please check your API key.',
     notes: 'Custom Notes',
-    notesPlaceholder: 'Any specific requests...',
+    notesPlaceholder: 'Menu on right, softer colors etc...',
     styles: {
       minimal: 'Minimalist',
       modern: 'Modern Glass',
@@ -69,13 +68,12 @@ const translations = {
     createKey: 'Anahtar Oluştur',
     startSystem: 'Sistemi Başlat',
     sessionDeactive: 'Verileriniz 24 saat sonra deaktif edilir.',
-    elementsKitStandards: 'ElementsKit Standartları',
     logout: 'Oturumu Kapat',
-    slogan: 'Sade. Modern. ZyHeader.',
-    sloganDesc: 'Yapay zeka ile WordPress Elementor siteniz için kusursuz header tasarımları üretin.',
+    slogan: 'Elit. Modern. ZyHeader.',
+    sloganDesc: 'Premium tasarım kütüphanelerinden ilham alan Elementor Pro headerları üretin.',
     flexReady: 'Elementor Flex Box Uyumlu',
     sector: 'Sektör',
-    sectorPlaceholder: 'Örn: Restoran, Yazılım, Kozmetik...',
+    sectorPlaceholder: 'Örn: Yaratıcı Ajans, Emlak, Moda...',
     designStyle: 'Tasarım Stili',
     visualMechanic: 'Görsel Mekanik',
     logoLabel: 'Logo (Metin veya Resim URL)',
@@ -91,11 +89,11 @@ const translations = {
     colors: 'Renkler',
     fontFamily: 'Font Ailesi',
     designLogic: 'Tasarım Mantığı',
-    footerText: 'AI Designer - Profesyonel Elementor Bileşenleri',
+    footerText: 'AI Designer - Üst Düzey Elementor Bileşenleri',
     back: 'Geri Dön',
     error: 'Tasarım hatası. Lütfen API anahtarınızı kontrol edin.',
     notes: 'Özel Notlar',
-    notesPlaceholder: 'Özel bir isteğiniz var mı...',
+    notesPlaceholder: 'Menü sağda olsun, renkler yumuşak olsun...',
     styles: {
       minimal: 'Minimalist',
       modern: 'Modern Glass',
@@ -289,9 +287,6 @@ const App: React.FC = () => {
             >
               <Languages size={14} /> {lang.toUpperCase()}
             </button>
-            <a href="https://wpmet.com/plugin/elementskit/header/" target="_blank" className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-neutral-500 uppercase tracking-widest hover:text-white transition-colors">
-              {t.elementsKitStandards} <ExternalLink size={12} />
-            </a>
             <button onClick={logout} className="p-2 hover:text-red-500 transition-colors" title={t.logout}>
               <LogOut size={18} />
             </button>

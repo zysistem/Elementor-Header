@@ -13,7 +13,7 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
 
   useEffect(() => {
     setIsMenuOpen(false);
-  }, [isMobileView]);
+  }, [isMobileView, design]);
 
   const getBgStyle = () => {
     if (hasBlur) {
@@ -114,14 +114,18 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
           </div>
 
           {isMenuOpen && (
-            <div className="fixed inset-0 bg-black/98 backdrop-blur-2xl z-[125] flex flex-col items-center justify-center p-12 animate-in fade-in duration-300">
-               <nav className="flex flex-col items-center gap-8">
+            <div 
+              className="absolute inset-0 bg-black/98 backdrop-blur-2xl z-[125] flex flex-col items-center justify-center p-12 animate-in fade-in duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+               <nav className="flex flex-col items-center gap-8" onClick={(e) => e.stopPropagation()}>
                 {navigation.map((item, idx) => (
                   <a 
                     key={idx} 
                     href={item.url} 
                     className="text-2xl font-semibold tracking-tight hover:text-indigo-500 transition-all uppercase" 
                     style={{ color: colors.text, fontFamily: `${fontFamily}, sans-serif` }}
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item.label}
                   </a>
@@ -130,6 +134,7 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
                    <button 
                     className="mt-4 px-10 py-5 rounded-xl text-sm font-semibold tracking-wider uppercase"
                     style={{ backgroundColor: colors.primary, color: '#fff', fontFamily: `${fontFamily}, sans-serif` }}
+                    onClick={() => setIsMenuOpen(false)}
                    >
                      {cta.text}
                    </button>

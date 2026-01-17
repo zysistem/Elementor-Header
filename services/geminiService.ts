@@ -23,28 +23,26 @@ export const generateHeaderDesignVariations = async (
 
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `You are a High-End Web Designer and Elementor Pro expert. Inspired by ElementsKit and modern UI trends (SaaS, Luxury, Minimalist), create 4 DIFFERENT header designs.
+    contents: `You are a specialized Elementor Pro and ElementsKit developer. You must generate 4 DIFFERENT header variations based on these exact structural patterns:
+
+    1. "The Software Layout" (V1): Bold primary background (e.g., #6937CE), white text, rounded CTA buttons (10px), centered navigation, strictly modern.
+    2. "The Dual-Bar Professional" (V2): A top bar containing info (phone/email) and social icons, with a clean white main navigation bar below. Professional and informative.
+    3. "The Centered Identity" (V3): Centered logo with menu items split or balanced on both sides. High-end aesthetic, often used in luxury or fashion.
+    4. "The High-Tech Glass" (V4): Full-width, semi-transparent background with mandatory 'backdrop-filter: blur(10px)'. Floating pill-shaped container or standard full-width with thin borders.
 
     PARAMETERS:
     - Sector: ${sector}
-    - User Request: ${description}
+    - Custom Notes: ${description}
     - Style: ${userPrefs.style}
-    - Technical: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Blur Enabled' : 'Blur Disabled'}
+    - Technical: ${userPrefs.isSticky ? 'Sticky' : 'Static'}, ${userPrefs.hasBlur ? 'Blur 10px' : 'No Blur'}
     - Language: ${language.toUpperCase()}
 
     ${langPrompt}
 
-    DESIGN APPROACHES:
-    1. "The Minimalist": Very thin fonts, wide letter-spacing, fully transparent background, logo on the left.
-    2. "The Floating Pill": Detached from the top, capsule-shaped, thin borders, with blur effect.
-    3. "The Centered Identity": Centered logo, menu items balanced on left and right (Split menu), premium feel.
-    4. "The Action Oriented": Prominent CTA button on the right, thin top bar (double-row) for social icons or brief contact info.
-
     RULES:
-    - Typography: Avoid chunky fonts. Use 'Inter', 'Outfit', or 'Plus Jakarta Sans'. Weights between 400-600.
-    - Colors: Choose modern palettes matching the sector.
-    - Content: Menu items and CTA text must be strictly relevant to the '${sector}' sector in ${language.toUpperCase()}.
-    - Blur: If blur is enabled, use 'backdrop-filter: blur(10px)'.`,
+    - Typography: Use 'Inter', 'Outfit', 'Montserrat', 'Poppins', 'Roboto', or 'Jost'. No chunky fonts.
+    - Content: Menu items and CTA must be highly relevant to ${sector}.
+    - Structure: For Elementor Flex Containers. Use the 'layout' field to specify: 'left-logo', 'center-logo', 'split-menu', or 'floating-pill'.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -96,7 +94,7 @@ export const generateHeaderDesignVariations = async (
             isSticky: { type: Type.BOOLEAN },
             hasBlur: { type: Type.BOOLEAN }
           },
-          required: ["sector", "style", "fontFamily", "mechanicSummary", "colors", "logo", "navigation", "isSticky", "hasBlur"]
+          required: ["sector", "style", "fontFamily", "mechanicSummary", "colors", "logo", "navigation", "isSticky", "hasBlur", "layout"]
         }
       }
     }
