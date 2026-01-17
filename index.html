@@ -17,9 +17,11 @@
         overflow-x: hidden;
       }
       #root { min-height: 100vh; }
-      /* Hide scrollbars for cleaner preview */
-      .scrollbar-hide::-webkit-scrollbar { display: none; }
-      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #0a0a0a; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #444; }
     </style>
     <script type="importmap">
 {
@@ -37,6 +39,7 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- CRITICAL: Script tag must be present for the app to load -->
     <script type="module" src="index.tsx"></script>
   </body>
 </html>

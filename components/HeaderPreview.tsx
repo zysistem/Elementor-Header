@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { HeaderDesign } from '../types';
-import { Menu, X, ArrowRight, Star, MapPin } from 'lucide-react';
+import { Menu, X, ArrowRight, Star, Globe, Shield } from 'lucide-react';
 
 interface Props {
   design: HeaderDesign;
@@ -11,7 +11,7 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
   const { colors, logo, navigation, cta, hasBlur, isSticky } = design;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Close menu when view changes
+  // Close menu when view mode toggles
   useEffect(() => {
     setIsMenuOpen(false);
   }, [isMobileView]);
@@ -44,8 +44,8 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
   );
 
   return (
-    <div className={`transition-all duration-700 ease-in-out border border-white/10 rounded-[2.5rem] overflow-hidden bg-black shadow-2xl relative ${isMobileView ? 'max-w-[375px] mx-auto h-[700px]' : 'w-full h-[700px]'}`}>
-      {/* Simulation Top Bar */}
+    <div className={`transition-all duration-700 ease-in-out border border-white/10 rounded-[2.5rem] overflow-hidden bg-black shadow-2xl relative ${isMobileView ? 'max-w-[375px] mx-auto h-[750px]' : 'w-full h-[750px]'}`}>
+      {/* Simulation Top Browser Bar */}
       <div className="bg-neutral-900 px-6 py-3 border-b border-white/5 flex justify-between items-center shrink-0">
         <div className="flex gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-red-500/30"></div>
@@ -53,7 +53,7 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
           <div className="w-2.5 h-2.5 rounded-full bg-green-500/30"></div>
         </div>
         <div className="bg-black/50 border border-white/5 rounded-full px-8 py-0.5 text-[8px] text-neutral-500 font-bold tracking-widest uppercase truncate max-w-[150px]">
-          {isMobileView ? 'Mobile' : 'pachacave-hotel.com'}
+          {isMobileView ? 'Mobile View' : 'preview.zysistem.net'}
         </div>
         <div className="w-8"></div>
       </div>
@@ -130,64 +130,64 @@ const HeaderPreview: React.FC<Props> = ({ design, isMobileView }) => {
           )}
         </header>
 
-        {/* HERO SECTION */}
-        <section className="relative min-h-[550px] flex items-center justify-center px-8 py-20">
+        {/* HERO SECTION - Resimli ve Modern */}
+        <section className="relative min-h-[600px] flex items-center justify-center px-8 py-20 overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
              <img 
-               src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=2000" 
-               alt="Hero" 
-               className="w-full h-full object-cover opacity-50 grayscale-[0.3]"
+               src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000" 
+               alt="Hero Background" 
+               className="w-full h-full object-cover opacity-60 grayscale-[0.5]"
              />
-             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent"></div>
+             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent"></div>
           </div>
 
-          <div className="relative z-10 max-w-4xl w-full text-center space-y-8">
-             <div className="inline-flex items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-[9px] font-black text-indigo-400 uppercase tracking-[0.3em]">
-               <Star size={10} fill="currentColor" /> Premium Experience
+          <div className="relative z-10 max-w-4xl w-full text-center space-y-10 animate-in slide-in-from-bottom-12 duration-1000">
+             <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 backdrop-blur-md border border-indigo-500/20 rounded-full text-[10px] font-black text-indigo-400 uppercase tracking-[0.4em]">
+               <Shield size={12} className="mr-1" /> Next Generation Aritificial Intellegence
              </div>
-             <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-[0.9] md:leading-[1]">
-                Unutulmaz <br/> 
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500 italic">Anlar Keşfedin</span>
+             <h1 className="text-4xl md:text-8xl font-black text-white tracking-tighter leading-[0.85] uppercase">
+                Dijital <br/> 
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-500 italic">Dönüşümünüzü</span> <br/> Başlatın
              </h1>
-             <p className="text-neutral-400 text-sm md:text-lg font-medium max-w-xl mx-auto leading-relaxed">
-                Modern mimari ve eşsiz doğanın buluştuğu noktada, hayallerinizin ötesinde bir tatil deneyimi sizi bekliyor.
+             <p className="text-neutral-400 text-sm md:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
+                Modern mimari ve yapay zekanın gücünü kullanarak, markanızı dijital dünyada zirveye taşıyacak benzersiz arayüzler tasarlıyoruz.
              </p>
-             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
                 <button 
-                  className="w-full sm:w-auto px-10 py-5 bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-neutral-200 transition-all flex items-center justify-center gap-3"
+                  className="w-full sm:w-auto px-12 py-6 bg-white text-black font-black text-[10px] uppercase tracking-[0.3em] rounded-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-white/5"
                 >
-                  Şimdi Rezervasyon Yap <ArrowRight size={14} />
+                  Üretmeye Başla <ArrowRight size={16} />
                 </button>
-                <div className="flex items-center gap-2 text-white/60 text-[10px] font-bold uppercase tracking-widest px-6 py-4">
-                  <MapPin size={14} className="text-indigo-500" /> Cappadocia, Turkey
+                <div className="flex items-center gap-4 text-white/40 text-[10px] font-bold uppercase tracking-widest">
+                  <Globe size={18} className="text-indigo-500" /> Küresel Erişim & 7/24 Destek
                 </div>
              </div>
           </div>
         </section>
 
-        {/* Content Section Placeholder */}
-        <section className="px-8 py-20 bg-[#070707]">
-           <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="bg-white/5 border border-white/10 rounded-[2rem] p-8 space-y-6 group hover:bg-white/[0.08] transition-all">
-                  <div className="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 border border-indigo-500/20 group-hover:scale-110 transition-transform">
-                     <Star size={24} />
+        {/* Features Section Placeholder */}
+        <section className="px-8 py-24 bg-[#070707] border-t border-white/5">
+           <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {[
+                { title: 'Hız', desc: 'Saniyeler içinde tasarım varyasyonları üretin.' },
+                { title: 'Uyum', desc: 'Tüm cihazlarla ve Elementor Flex Container ile tam uyumlu.' },
+                { title: 'Zeka', desc: 'Sektörünüze özel renk ve tipografi seçimleri.' }
+              ].map((feature, i) => (
+                <div key={i} className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10 space-y-6 hover:border-indigo-500/30 transition-all group">
+                  <div className="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 border border-indigo-500/20 group-hover:scale-110 transition-transform shadow-xl">
+                     <Star size={28} />
                   </div>
                   <div className="space-y-3">
-                    <div className="h-5 w-1/2 bg-white/20 rounded-full"></div>
-                    <div className="space-y-2">
-                       <div className="h-2 w-full bg-white/5 rounded-full"></div>
-                       <div className="h-2 w-4/5 bg-white/5 rounded-full"></div>
-                    </div>
+                    <h3 className="text-white text-xl font-black uppercase tracking-tighter">{feature.title}</h3>
+                    <p className="text-neutral-500 text-sm font-medium leading-relaxed">{feature.desc}</p>
                   </div>
                 </div>
               ))}
            </div>
         </section>
         
-        {/* Extra Height for Scroll Testing */}
-        <div className="h-80 bg-gradient-to-b from-[#070707] to-black"></div>
+        <div className="h-60 bg-black"></div>
       </div>
     </div>
   );

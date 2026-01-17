@@ -3,9 +3,9 @@ import { HeaderDesign, ElementorJSON } from "../types";
 export const convertToElementorJSON = (design: HeaderDesign): string => {
   const containerId = Math.random().toString(36).substr(2, 9);
   
-  // Elementor specific high-priority CSS logic
+  // High-priority CSS logic for Elementor
   const cssCode = `
-/* Elementor AI Header Auto-Generated CSS */
+/* ELEMENTOR AI HEADER INJECTION */
 selector {
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
     ${design.hasBlur ? 'backdrop-filter: blur(25px) saturate(200%) !important; -webkit-backdrop-filter: blur(25px) saturate(200%) !important;' : ''}
@@ -16,46 +16,47 @@ selector.elementor-sticky--effects {
     background-color: ${design.colors.background} !important;
     padding-top: 10px !important;
     padding-bottom: 10px !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Nav Menu Styling */
+/* Navigation Items */
 selector .elementor-nav-menu--main .elementor-item {
     color: ${design.colors.text} !important;
     font-weight: 800 !important;
-    letter-spacing: 0.12em !important;
+    letter-spacing: 0.15em !important;
     text-transform: uppercase !important;
     font-size: 13px !important;
-    transition: color 0.3s ease !important;
+    transition: all 0.3s ease !important;
 }
 
 selector .elementor-nav-menu--main .elementor-item:hover,
 selector .elementor-nav-menu--main .elementor-item.elementor-item-active {
     color: ${design.colors.primary} !important;
+    opacity: 0.8 !important;
 }
 
-/* Button Styling */
+/* Action Button */
 selector .elementor-button {
     background-color: ${design.colors.primary} !important;
-    border-radius: 12px !important;
+    border-radius: 14px !important;
     padding: 16px 32px !important;
     font-weight: 900 !important;
     letter-spacing: 0.1em !important;
     transition: all 0.3s ease !important;
-    box-shadow: 0 8px 25px ${design.colors.primary}33 !important;
+    box-shadow: 0 10px 30px ${design.colors.primary}40 !important;
 }
 
 selector .elementor-button:hover {
-    transform: translateY(-3px) !important;
-    box-shadow: 0 12px 35px ${design.colors.primary}4D !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 15px 45px ${design.colors.primary}60 !important;
     filter: brightness(1.1);
 }
 
-/* Hamburger Menu Toggle */
+/* Mobile Toggle */
 selector .elementor-menu-toggle {
     color: ${design.colors.primary} !important;
     background-color: rgba(255, 255, 255, 0.05) !important;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
 }
   `.replace(/\s+/g, ' ').trim();
 
@@ -67,7 +68,7 @@ selector .elementor-menu-toggle {
       sticky: design.isSticky ? "top" : "",
       sticky_on: ["desktop", "tablet", "mobile"],
       sticky_effects_offset: 50,
-      custom_css: cssCode // GLOBAL SCOPE INJECTION
+      custom_css: cssCode // Page level CSS
     },
     content: [
       {
@@ -84,24 +85,24 @@ selector .elementor-menu-toggle {
           background_color: design.colors.background,
           padding: {
             unit: "px",
-            top: "20",
+            top: "22",
             right: "60",
-            bottom: "20",
+            bottom: "22",
             left: "60",
             isLinked: false
           },
           padding_mobile: {
             unit: "px",
-            top: "12",
+            top: "14",
             right: "24",
-            bottom: "12",
+            bottom: "14",
             left: "24",
             isLinked: false
           },
-          _custom_css: cssCode // CONTAINER SPECIFIC INJECTION
+          _custom_css: cssCode // Container level CSS
         },
         elements: [
-          // Logo Widget
+          // Logo Section
           {
             id: Math.random().toString(36).substr(2, 9),
             elType: "widget",
@@ -116,13 +117,13 @@ selector .elementor-menu-toggle {
               typography_font_family: "Inter",
               _custom_css: cssCode
             } : {
-              image: { url: design.logo.content || "https://via.placeholder.com/180x50" },
-              width: { unit: "px", size: 180 },
-              width_mobile: { unit: "px", size: 120 },
+              image: { url: design.logo.content || "https://via.placeholder.com/200x60" },
+              width: { unit: "px", size: 190 },
+              width_mobile: { unit: "px", size: 125 },
               _custom_css: cssCode
             }
           },
-          // Menu Widget
+          // Navigation Menu Section
           {
             id: Math.random().toString(36).substr(2, 9),
             elType: "widget",
@@ -138,13 +139,13 @@ selector .elementor-menu-toggle {
               _custom_css: cssCode
             }
           },
-          // CTA Button
+          // Call To Action Section
           {
             id: Math.random().toString(36).substr(2, 9),
             elType: "widget",
             widgetType: "button",
             settings: {
-              text: design.cta?.text || "EXPLORE",
+              text: design.cta?.text || "EXPLORE NOW",
               link: { url: "#" },
               background_color: design.colors.primary,
               button_text_color: "#ffffff",
