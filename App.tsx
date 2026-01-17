@@ -3,7 +3,7 @@ import { generateHeaderDesignVariations } from './services/geminiService';
 import { convertToElementorJSON } from './services/elementorExporter';
 import { HeaderDesign } from './types';
 import HeaderPreview from './components/HeaderPreview';
-import { Sparkles, Wand2, Loader2, Smartphone, Monitor, ShieldCheck, Download, Key, LogOut, LayoutGrid, Palette, Type as TypeIcon, Info, ExternalLink } from 'lucide-react';
+import { Sparkles, Wand2, Loader2, Smartphone, Monitor, ShieldCheck, Download, Key, LogOut, LayoutGrid, Palette, Type as TypeIcon, Info, ExternalLink, HelpCircle } from 'lucide-react';
 
 const API_KEY_STORAGE_KEY = 'header_forge_api_key';
 const EXPIRATION_TIME = 24 * 60 * 60 * 1000;
@@ -95,7 +95,7 @@ const App: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `header-${design.sector.toLowerCase().replace(/\s+/g, '-')}.json`;
+    link.download = `zyheader-${design.sector.toLowerCase().replace(/\s+/g, '-')}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -105,27 +105,51 @@ const App: React.FC = () => {
   if (!isKeyValid) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#050505] p-6 selection:bg-white/10">
-        <div className="w-full max-w-sm space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-500">
+        <div className="w-full max-w-sm space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-500">
           <div className="text-center space-y-4">
             <div className="w-16 h-16 bg-white text-black rounded-2xl flex items-center justify-center mx-auto shadow-2xl">
               <Key size={28} />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight">Erişim Anahtarı</h1>
-            <p className="text-neutral-500 text-xs font-medium px-4">
-              Sistemi aktif etmek için Gemini API Key girin. <br/> Verileriniz yerel tarayıcıda 24 saat saklanır.
+            <h1 className="text-3xl font-bold tracking-tight">ZyHeader</h1>
+            <p className="text-neutral-500 text-xs font-medium px-4 leading-relaxed">
+              Sistemi aktif etmek için Gemini API Key girin. 
             </p>
           </div>
+          
+          <div className="bg-white/5 border border-white/5 p-5 rounded-xl space-y-3">
+            <div className="flex items-center gap-2 text-indigo-400">
+              <HelpCircle size={16} />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Nasıl Alınır?</span>
+            </div>
+            <p className="text-[11px] text-neutral-400 leading-relaxed">
+              Gemini API anahtarınızı <strong>Google AI Studio</strong> üzerinden ücretsiz ve saniyeler içinde oluşturabilirsiniz.
+            </p>
+            <a 
+              href="https://aistudio.google.com/app/apikey" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center justify-between group px-4 py-3 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all"
+            >
+              <span className="text-[10px] font-bold text-white uppercase tracking-widest">Anahtar Oluştur</span>
+              <ExternalLink size={12} className="text-neutral-500 group-hover:text-white transition-colors" />
+            </a>
+          </div>
+
           <form onSubmit={saveApiKey} className="space-y-4">
             <input
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="API Anahtarı..."
-              className="w-full px-6 py-4 rounded-xl bg-white/5 border border-white/5 outline-none focus:border-white/20 text-white font-mono text-sm transition-all"
+              placeholder="API Anahtarınızı buraya yapıştırın..."
+              className="w-full px-6 py-4 rounded-xl bg-white/5 border border-white/5 outline-none focus:border-white/20 text-white font-mono text-sm transition-all shadow-inner"
               required
             />
-            <button type="submit" className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-neutral-200 transition-all uppercase tracking-widest text-[10px]">Başlat</button>
+            <button type="submit" className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-neutral-200 transition-all uppercase tracking-widest text-[10px] shadow-2xl">Sistemi Başlat</button>
           </form>
+          
+          <p className="text-[9px] text-center text-neutral-600 uppercase font-bold tracking-[0.2em]">
+            Verileriniz 24 saat sonra deaktif edilir.
+          </p>
         </div>
       </div>
     );
@@ -139,13 +163,13 @@ const App: React.FC = () => {
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
               <Sparkles className="text-black" size={16} />
             </div>
-            <h1 className="text-sm font-bold tracking-tight uppercase">Header <span className="opacity-40">Forge AI</span></h1>
+            <h1 className="text-sm font-bold tracking-tight uppercase">ZyHeader <span className="opacity-40">AI</span></h1>
           </div>
           <div className="flex items-center gap-6">
             <a href="https://wpmet.com/plugin/elementskit/header/" target="_blank" className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-neutral-500 uppercase tracking-widest hover:text-white transition-colors">
-              ElementsKit İlhamı <ExternalLink size={12} />
+              ElementsKit Standartları <ExternalLink size={12} />
             </a>
-            <button onClick={logout} className="p-2 hover:text-red-500 transition-colors">
+            <button onClick={logout} className="p-2 hover:text-red-500 transition-colors" title="Oturumu Kapat">
               <LogOut size={18} />
             </button>
           </div>
@@ -157,14 +181,14 @@ const App: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-20 items-center py-10">
             <div className="space-y-8">
               <h2 className="text-6xl font-bold tracking-tight leading-tight animate-in slide-in-from-left duration-500">
-                Sade. Modern. <br/> <span className="text-neutral-500">Kusursuz.</span>
+                Sade. Modern. <br/> <span className="text-neutral-500">ZyHeader.</span>
               </h2>
               <p className="text-lg text-neutral-500 font-medium max-w-md leading-relaxed">
-                ElementsKit standartlarında, Elementor Pro uyumlu ultra modern header bileşenleri üretin.
+                Yapay zeka ile WordPress Elementor siteniz için kusursuz header tasarımları üretin.
               </p>
               <div className="flex gap-4">
                  <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full text-[10px] font-bold text-neutral-500 border border-white/5 uppercase tracking-widest">
-                   <ShieldCheck size={14} /> Flex Container
+                   <ShieldCheck size={14} /> Elementor Flex Box Ready
                  </div>
               </div>
             </div>
@@ -177,7 +201,7 @@ const App: React.FC = () => {
                     type="text"
                     value={sector}
                     onChange={(e) => setSector(e.target.value)}
-                    placeholder="Örn: Teknoloji, Sağlık, E-ticaret..."
+                    placeholder="Örn: Restoran, Yazılım, Kozmetik..."
                     className="w-full px-6 py-4 rounded-xl bg-white/5 border border-white/5 outline-none focus:border-white/10 font-medium transition-all"
                     required
                   />
@@ -185,8 +209,8 @@ const App: React.FC = () => {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest ml-1">Stil</label>
-                    <select value={style} onChange={(e) => setStyle(e.target.value as any)} className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/5 outline-none font-medium">
+                    <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest ml-1">Tasarım Stili</label>
+                    <select value={style} onChange={(e) => setStyle(e.target.value as any)} className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/5 outline-none font-medium appearance-none cursor-pointer">
                       <option value="minimal">Minimalist</option>
                       <option value="modern">Modern Glass</option>
                       <option value="corporate">Kurumsal</option>
@@ -194,23 +218,23 @@ const App: React.FC = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest ml-1">Mekanik</label>
-                    <select value={mechanic} onChange={(e) => setMechanic(e.target.value as any)} className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/5 outline-none font-medium">
+                    <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest ml-1">Görsel Mekanik</label>
+                    <select value={mechanic} onChange={(e) => setMechanic(e.target.value as any)} className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/5 outline-none font-medium appearance-none cursor-pointer">
                       <option value="luxury">Lüks & Sade</option>
                       <option value="glass">Glassmorphism</option>
-                      <option value="brutal">Sert Hatlar</option>
+                      <option value="brutal">Neo-Brutalism</option>
                       <option value="gradient">Gradient Soft</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest ml-1">Logo (Metin veya URL)</label>
+                  <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest ml-1">Logo (Metin veya Resim URL)</label>
                   <input
                     type="text"
                     value={logoContent}
                     onChange={(e) => setLogoContent(e.target.value)}
-                    placeholder="Marka Adı veya Logo URL..."
+                    placeholder="Marka Adı veya .png Logo URL..."
                     className="w-full px-6 py-4 rounded-xl bg-white/5 border border-white/5 outline-none focus:border-white/10"
                   />
                 </div>
@@ -218,17 +242,17 @@ const App: React.FC = () => {
 
               <div className="flex gap-4">
                 <button type="button" onClick={() => setIsSticky(!isSticky)} className={`flex-1 py-4 rounded-xl border transition-all flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-widest ${isSticky ? 'bg-white text-black border-white' : 'bg-white/5 border-white/5 text-neutral-500'}`}>
-                  <LayoutGrid size={14} /> Sticky: {isSticky ? 'Açık' : 'Kapalı'}
+                  <LayoutGrid size={14} /> Sticky: {isSticky ? 'Aktif' : 'Pasif'}
                 </button>
                 <button type="button" onClick={() => setHasBlur(!hasBlur)} className={`flex-1 py-4 rounded-xl border transition-all flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-widest ${hasBlur ? 'bg-white text-black border-white' : 'bg-white/5 border-white/5 text-neutral-500'}`}>
-                  <Palette size={14} /> Blur: {hasBlur ? 'Açık' : 'Kapalı'}
+                  <Palette size={14} /> Blur: {hasBlur ? 'Aktif' : 'Pasif'}
                 </button>
               </div>
 
               {error && <div className="text-red-500 text-[10px] font-bold text-center uppercase tracking-widest">{error}</div>}
 
-              <button disabled={loading} type="submit" className="w-full bg-white text-black font-bold py-5 rounded-2xl flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em] hover:bg-neutral-200 transition-all">
-                {loading ? <Loader2 className="animate-spin" size={16} /> : <Wand2 size={16} />} Tasarımları Oluştur
+              <button disabled={loading} type="submit" className="w-full bg-white text-black font-bold py-5 rounded-2xl flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em] hover:bg-neutral-200 transition-all shadow-xl">
+                {loading ? <Loader2 className="animate-spin" size={16} /> : <Wand2 size={16} />} Tasarımları Üret
               </button>
             </form>
           </div>
@@ -246,8 +270,8 @@ const App: React.FC = () => {
                 <button onClick={() => setIsPreviewMobile(!isPreviewMobile)} className={`p-3 rounded-xl border transition-all ${isPreviewMobile ? 'bg-white text-black border-white' : 'bg-white/5 border-white/5 text-neutral-500'}`}>
                   {isPreviewMobile ? <Smartphone size={20} /> : <Monitor size={20} />}
                 </button>
-                <button onClick={() => setVariations([])} className="px-6 py-3 bg-white/5 border border-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest text-neutral-500">Sıfırla</button>
-                <button onClick={handleDownload} className="px-8 py-3 bg-white text-black rounded-xl font-bold text-[10px] uppercase tracking-widest flex items-center gap-3">
+                <button onClick={() => setVariations([])} className="px-6 py-3 bg-white/5 border border-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest text-neutral-500">Geri Dön</button>
+                <button onClick={handleDownload} className="px-8 py-3 bg-white text-black rounded-xl font-bold text-[10px] uppercase tracking-widest flex items-center gap-3 hover:scale-105 transition-all shadow-lg">
                   <Download size={14} /> JSON İndir
                 </button>
               </div>
@@ -260,19 +284,19 @@ const App: React.FC = () => {
                 </div>
                 <div className="flex gap-2">
                   {Object.values(variations[selectedIdx].colors).map((c, i) => (
-                    <div key={i} className="w-8 h-8 rounded-lg border border-white/10" style={{backgroundColor: c}} title={c}></div>
+                    <div key={i} className="w-8 h-8 rounded-lg border border-white/10 shadow-sm" style={{backgroundColor: c}} title={c}></div>
                   ))}
                 </div>
               </div>
               <div className="bg-white/5 p-6 rounded-3xl border border-white/5 space-y-4">
                 <div className="flex items-center gap-2 text-neutral-500">
-                  <TypeIcon size={14} /> <span className="text-[10px] font-bold uppercase tracking-widest">Font</span>
+                  <TypeIcon size={14} /> <span className="text-[10px] font-bold uppercase tracking-widest">Font Ailesi</span>
                 </div>
                 <p className="text-lg font-bold" style={{fontFamily: variations[selectedIdx].fontFamily}}>{variations[selectedIdx].fontFamily}</p>
               </div>
               <div className="lg:col-span-2 bg-white/5 p-6 rounded-3xl border border-white/5 space-y-4">
                 <div className="flex items-center gap-2 text-neutral-500">
-                  <Info size={14} /> <span className="text-[10px] font-bold uppercase tracking-widest">Tasarım Özeti</span>
+                  <Info size={14} /> <span className="text-[10px] font-bold uppercase tracking-widest">Tasarım Mantığı</span>
                 </div>
                 <p className="text-[11px] text-neutral-400 font-medium leading-relaxed italic line-clamp-2">
                   "{variations[selectedIdx].mechanicSummary}"
@@ -285,9 +309,9 @@ const App: React.FC = () => {
         )}
       </main>
 
-      <footer className="container mx-auto px-8 py-20 text-center opacity-20 border-t border-white/5">
+      <footer className="container mx-auto px-8 py-20 text-center opacity-30 border-t border-white/5">
         <p className="text-[9px] font-bold tracking-[0.5em] uppercase text-neutral-500">
-          &copy; 2024 Header Forge Engine - ElementsKit Standard AI Components
+          &copy; {new Date().getFullYear()} ZyHeader AI Designer - Professional Elementor Components
         </p>
       </footer>
     </div>
